@@ -29,7 +29,7 @@ app.engine('hbs', exphbs.engine({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 
 //每一個req都會經過bodyParser使用urlencoded解析
-app.use(bodyParser.urlencoded({ extended:true }))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
     //拿全部todo資料
@@ -52,8 +52,16 @@ app.post('/todos', (req, res) => {
     //     .then(() => res.redirect('/'))
     //     .catch(error => console.log(error))
     //上下結果相等的(上是先建立todo實體再儲存(可做更多動作但這邊沒這需求)，下是直接建立一筆)
-    return Todo.create({name})
+    return Todo.create({ name })
         .then(() => res.redirect('/'))
+        .catch(error => console.log(error))
+})
+
+app.get('/todos/:id', (req, res) => {
+    const id = req.params.id
+    return Todo.findById(id)
+        .lean()
+        .then(todo => res.render('detail', { todo }))
         .catch(error => console.log(error))
 })
 
