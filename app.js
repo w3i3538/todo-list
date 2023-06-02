@@ -77,12 +77,20 @@ app.post('/todos/:id/edit', (req, res) => {
     const id = req.params.id
     const name = req.body.name
     return Todo.findById(id)
-        .then(todo=>{
+        .then(todo => {
             todo.name = name
             return todo.save()
         })
-        .then(()=>res.redirect(`/todos/${id}`))
-        .catch(error=>console.log(error))
+        .then(() => res.redirect(`/todos/${id}`))
+        .catch(error => console.log(error))
+})
+
+app.post('/todos/:id/delete', (req, res) => {
+    const id = req.params.id
+    return Todo.findById(id)
+        .then(todo => todo.remove())
+        .then(() => res.redirect('/'))
+        .catch(error => console.log(error))
 })
 
 app.listen(3000, () => {
