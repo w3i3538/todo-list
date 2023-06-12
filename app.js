@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
     //拿全部todo資料
     Todo.find()
         .lean()
+        .sort({ name: 'asc' })//desc反序
         .then(todos => res.render('index', { todos }))
         .catch(error => console.log(error))
 
@@ -79,7 +80,7 @@ app.post('/todos/:id/edit', (req, res) => {
     return Todo.findById(id)
         .then(todo => {
             todo.name = name
-            todo.isDone = isDone ==='on'
+            todo.isDone = isDone === 'on'
             return todo.save()
         })
         .then(() => res.redirect(`/todos/${id}`))
