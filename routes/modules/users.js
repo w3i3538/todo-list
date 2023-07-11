@@ -12,8 +12,15 @@ router.get('/login', (req, res) => {
 // 加入 middleware，驗證 request 登入狀態
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: 'users/login'
-}))
+    failureRedirect: '/users/login',
+    failureFlash: true
+}), (req, res) => {
+    const { email, password } = req.body
+    const errors = []
+    if (!email || !password) {
+        errors.push({ message: '所有欄位都是必填。' })
+    }
+})
 
 router.get('/register', (req, res) => {
     res.render('register')

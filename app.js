@@ -28,10 +28,12 @@ app.use(session({
 //每一個req都會經過bodyParser使用urlencoded解析
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
+
+app.use(flash())
 // 呼叫 Passport 函式並傳入 app，這條要寫在路由(routes)之前
 usePassport(app)
 
-app.use(flash())
+
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated()
     res.locals.user = req.user
