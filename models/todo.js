@@ -9,6 +9,12 @@ const todoSchema = new Schema({
     isDone: {
         type: Boolean,
         default: false  // 預設完成狀態為 false
+    },
+    userId:{
+        type: Schema.Types.ObjectId,
+        ref:'User',
+        index:true,
+        require:true
     }
 })
 

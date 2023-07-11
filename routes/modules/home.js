@@ -5,8 +5,9 @@ const router = express.Router()
 const Todo = require('../../models/todo')
 // 定義首頁路由
 router.get('/', (req, res) => {
+    const userId = req.user._id
     //拿全部todo資料
-    Todo.find()
+    Todo.find({ userId })
         .lean()
         .sort({ name: 'asc' })//desc反序
         .then(todos => res.render('index', { todos }))
