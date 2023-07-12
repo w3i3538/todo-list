@@ -57,9 +57,6 @@ router.post('/register', (req, res) => {
         errors.push({ message: '所有欄位都是必填。' })
     }
     if (password !== confirmPassword) {
-        console.log('password:', password)
-        console.log('confirmPassword:', confirmPassword)
-
         errors.push({ message: '密碼與確認密碼不相符！' })
     }
     if (errors.length) {
