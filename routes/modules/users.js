@@ -10,16 +10,37 @@ router.get('/login', (req, res) => {
     res.render('login')
 })
 // 加入 middleware，驗證 request 登入狀態
-router.post('/login', passport.authenticate('local', {
+router.post('/login', (req, res, next) => {
+    const { email, password } = req.body
+    const errors = []
+
+    if (!email) {
+        errors.push({ message: '請輸入信箱。' })
+    }
+    if (!password) {
+        errors.push({ message: '請輸入密碼。' })
+    }
+    if (errors.length) {
+        req.session.loginForm = { email, password }
+        return res.render('login', {
+            errors,
+        })
+    }
+    next()
+}, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/users/login',
     failureFlash: true
+
 }), (req, res) => {
-    const { email, password } = req.body
-    const errors = []
-    if (!email || !password) {
-        errors.push({ message: '所有欄位都是必填。' })
-    }
+    const { email, password } = req.session.loginForm
+
+    res.render('login', {
+        email, 
+        password,
+        errors,
+    })
+
 })
 
 router.get('/register', (req, res) => {
@@ -35,6 +56,9 @@ router.post('/register', (req, res) => {
         errors.push({ message: '所有欄位都是必填。' })
     }
     if (password !== confirmPassword) {
+        console.log('password:', password)
+        console.log('confirmPassword:', confirmPassword)
+
         errors.push({ message: '密碼與確認密碼不相符！' })
     }
     if (errors.length) {
